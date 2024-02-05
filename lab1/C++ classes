@@ -1,0 +1,172 @@
+#include <iostream>
+#include <string>
+
+// Define the Course class
+class Course {
+public:
+    std::string course_code;
+    std::string course_name;
+};
+
+// Define the Grade class
+class Grade {
+public:
+    int mark;
+    char the_grade;
+
+    // Constructor to initialize grade with default values
+    Grade() : mark(-1), the_grade('N') {} // 'N' denotes grade not calculated yet
+};
+
+// Define the Student class
+class Student {
+public:
+    std::string reg_number;
+    std::string name;
+    int age;
+    Course course;
+    Grade grades;
+
+    // Function to calculate the grade based on the mark
+    void calculateGrade() {
+        if (grades.mark > 69) {
+            grades.the_grade = 'A';
+        } else if (grades.mark > 59) {
+            grades.the_grade = 'B';
+        } else if (grades.mark > 49) {
+            grades.the_grade = 'C';
+        } else if (grades.mark > 39) {
+            grades.the_grade = 'D';
+        } else {
+            grades.the_grade = 'E';
+        }
+    }
+};
+
+int main() {
+    const int MAX_STUDENTS = 40;
+    Student students[MAX_STUDENTS];
+    int studentCount = 0;
+    int choice;
+
+    do {
+        std::cout << "\nMenu:\n";
+        std::cout << "1. Add Student\n";
+        std::cout << "2. Edit Student Details\n";
+        std::cout << "3. Add Marks and Calculate Grades\n";
+        std::cout << "4. Display Students\n";
+        std::cout << "5. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                if (studentCount < MAX_STUDENTS) {
+                    Student newStudent;
+
+                    std::cout << "Enter registration number: ";
+                    std::cin >> newStudent.reg_number;
+
+                    std::cout << "Enter name: ";
+                    std::cin >> newStudent.name;
+
+                    std::cout << "Enter age: ";
+                    std::cin >> newStudent.age;
+
+                    std::cout << "Enter course code: ";
+                    std::cin >> newStudent.course.course_code;
+
+                    std::cout << "Enter course name: ";
+                    std::cin >> newStudent.course.course_name;
+
+                    students[studentCount] = newStudent;
+                    studentCount++;
+
+                    std::cout << "Student added successfully!\n";
+                } else {
+                    std::cout << "Maximum number of students reached!\n";
+                }
+                break;
+            }
+            case 2: {
+                std::string regNumber;
+                int found = 0;
+
+                std::cout << "Enter registration number of the student to edit: ";
+                std::cin >> regNumber;
+
+                for (int i = 0; i < studentCount; i++) {
+                    if (students[i].reg_number == regNumber) {
+                        std::cout << "Enter new name: ";
+                        std::cin >> students[i].name;
+
+                        std::cout << "Enter new age: ";
+                        std::cin >> students[i].age;
+
+                        std::cout << "Student details updated successfully!\n";
+                        found = 1;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    std::cout << "Student not found!\n";
+                }
+                break;
+            }
+            case 3: {
+                std::string regNumber;
+                int found = 0;
+
+                std::cout << "Enter registration number of the student to add marks: ";
+                std::cin >> regNumber;
+
+                for (int i = 0; i < studentCount; i++) {
+                    if (students[i].reg_number == regNumber) {
+                        std::cout << "Enter marks: ";
+                        std::cin >> students[i].grades.mark;
+
+                        students[i].calculateGrade();
+
+                        std::cout << "Marks added and grades calculated successfully!\n";
+                        found = 1;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    std::cout << "Student not found!\n";
+                }
+                break;
+            }
+            case 4: {
+                std::cout << "\nStudent Details:\n";
+                for (int i = 0; i < studentCount; i++) {
+                    std::cout << "Registration Number: " << students[i].reg_number << std::endl;
+                    std::cout << "Name: " << students[i].name << std::endl;
+                    std::cout << "Age: " << students[i].age << std::endl;
+                    std::cout << "Course Code: " << students[i].course.course_code << std::endl;
+                    std::cout << "Course Name: " << students[i].course.course_name << std::endl;
+
+                    if (students[i].grades.mark != -1) {
+                        std::cout << "Marks: " << students[i].grades.mark << std::endl;
+                        std::cout << "Grade: " << students[i].grades.the_grade << std::endl;
+                    } else {
+                        std::cout << "Marks: Not available" << std::endl;
+                        std::cout << "Grade: Not calculated" << std::endl;
+                    }
+
+                    std::cout << "------------------------\n";
+                }
+                break;
+            }
+            case 5:
+                std::cout << "Exiting program.\n";
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 5);
+
+    return 0;
+}
